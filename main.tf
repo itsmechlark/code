@@ -86,6 +86,7 @@ resource "azurerm_linux_virtual_machine" "coder" {
   }
 
   os_disk {
+    name                 = "${random_pet.rand.id}-vm-osdisk"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
     disk_size_gb         = 50

@@ -93,6 +93,6 @@ resource "azurerm_linux_virtual_machine" "coder" {
 
   admin_ssh_key {
     username   = var.username
-    public_key = file(var.ssh_public_key)
+    public_key = base64decode(var.ssh_public_key)
   }
 }

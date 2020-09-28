@@ -1,0 +1,17 @@
+# cloud-config
+users:
+    - name: coder
+      groups: sudo
+      shell: /bin/bash
+      sudo: ['ALL=(ALL) NOPASSWD:ALL']
+package_upgrade: true
+packages:
+    - postgresql
+    - postgresql-contrib
+    - redis-server
+    - gnupg2
+manage-resolv-conf: true
+    resolv_conf:
+      nameservers:
+        - '172.64.36.1'
+        - '172.64.36.2'

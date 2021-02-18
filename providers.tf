@@ -1,3 +1,11 @@
 provider "azurerm" {
-    features {}
+  features {}
+}
+
+terraform {
+  required_providers {
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+    }
+  }
 }

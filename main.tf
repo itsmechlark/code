@@ -43,6 +43,8 @@ resource "azurerm_network_interface" "nic" {
   }
 }
 
+data "cloudflare_ip_ranges" "cloudflare" {}
+
 resource "azurerm_network_security_group" "nsg" {
   name                = "${random_pet.rand.id}-nsg"
   location            = var.location
@@ -57,6 +59,18 @@ resource "azurerm_network_security_group" "nsg" {
     source_port_range          = "*"
     destination_port_range     = "22"
     source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Cloudflare"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_ranges    = ["80", "443"]
+    source_address_prefixes    = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
     destination_address_prefix = "*"
   }
 }
@@ -75,7 +89,7 @@ resource "azurerm_linux_virtual_machine" "coder" {
   computer_name                   = var.name
   custom_data                     = filebase64("./cloud-init.yaml")
   disable_password_authentication = true
-  network_interface_ids           = [
+  network_interface_ids = [
     azurerm_network_interface.nic.id,
   ]
 

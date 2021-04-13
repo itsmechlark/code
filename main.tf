@@ -84,7 +84,7 @@ resource "azurerm_linux_virtual_machine" "coder" {
   name                            = "${random_pet.rand.id}-vm"
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_B2s"
+  size                            = "Standard_D2as_v4"
   admin_username                  = var.username
   computer_name                   = var.name
   custom_data                     = filebase64("./cloud-init.yaml")

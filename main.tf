@@ -51,25 +51,13 @@ resource "azurerm_network_security_group" "nsg" {
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "SSH"
+    name                       = "Cloudflare"
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefixes    = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "Cloudflare"
-    priority                   = 1002
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_ranges    = ["80", "443"]
+    destination_port_range     = "*"
     source_address_prefixes    = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
     destination_address_prefix = "*"
   }

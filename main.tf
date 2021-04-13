@@ -58,7 +58,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "*"
+    source_address_prefixes    = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
     destination_address_prefix = "*"
   }
 

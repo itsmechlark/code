@@ -24,6 +24,7 @@ resource "cloudflare_access_application" "code" {
 }
 
 resource "cloudflare_access_ca_certificate" "code" {
+  zone_id        = var.cloudflare_zone_id
   application_id = cloudflare_access_application.code.id
 }
 

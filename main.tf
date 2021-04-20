@@ -148,6 +148,8 @@ data "template_file" "code-cloud_init" {
   template = file("./cloud-init.yaml")
   vars = {
     user_name          = var.username
+    hostname           = var.name
+    domain             = cloudflare_record.code.hostname
     argo_tunnel_id     = var.argo_tunnel_id
     ssh_ca_public_key  = base64encode(cloudflare_access_ca_certificate.code.public_key)
     cloudflared_config = base64encode(data.template_file.code-cloudflared_config.rendered)

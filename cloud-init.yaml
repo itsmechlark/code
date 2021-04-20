@@ -29,6 +29,10 @@ write_files:
   path: /etc/cloudflared/${argo_tunnel_id}.yml
   permissions: '644'
 
+bootcmd:
+  - echo localhost ${hostname} >> /etc/hosts
+  - echo localhost ${domain} >> /etc/hosts
+
 runcmd:
     # Configure SSH for Short-Lived CA
     - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'

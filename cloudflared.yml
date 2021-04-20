@@ -1,0 +1,7 @@
+tunnel: ${tunnel_id}
+credentials-file: /etc/cloudflared/${tunnel_id}.json
+
+ingress:
+  - hostname: ${domain}
+    service: ssh://localhost:22
+  - service: http_status:404

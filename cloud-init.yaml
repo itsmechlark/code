@@ -1,17 +1,39 @@
 # cloud-config
 users:
-    - name: coder
+    - name: ${user_name}
       groups: sudo
       shell: /bin/bash
-      sudo: ['ALL=(ALL) NOPASSWD:ALL']
+      sudo: ALL=(ALL) NOPASSWD:ALL
+
 package_upgrade: true
 packages:
     - postgresql
     - postgresql-contrib
     - redis-server
     - gnupg2
-manage-resolv-conf: true
-    resolv_conf:
-      nameservers:
-        - '172.64.36.1'
-        - '172.64.36.2'
+
+write_files:
+- encoding: b64
+  content: ${ssh_ca_public_key}
+  owner: root:root
+  path: /etc/ssh/ca.pub
+  permissions: '644'
+- encoding: b64
+  content: ${cloudflared_config}
+  owner: root:root
+  path: /etc/cloudflared/config.yml
+  permissions: '644'
+- encoding: b64
+  content: ${cloudflared_auth}
+  owner: root:root
+  path: /etc/cloudflared/${domain}.yml
+  permissions: '644'
+
+runcmd:
+    # Configure SSH for Short-Lived CA
+    - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'
+    - sudo sh -c 'echo "TrustedUserCAKeys /etc/ssh/ca.pub" >> /etc/ssh/sshd_config'
+    - sudo systemctl restart ssh
+    # Install Cloudflare CLI
+    - sudo curl -sSL -o /home/${user_name}/cloudflared-stable-linux-amd64.deb https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
+    - sudo dpkg -i /home/${user_name}/cloudflared-stable-linux-amd64.deb

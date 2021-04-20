@@ -46,3 +46,8 @@ variable "argo_tunnel_secret" {
 variable "argo_tunnel_tag" {
   type = string
 }
+
+variable "whitelisted_ips" {
+  type = list(string)
+  default     = []
+}

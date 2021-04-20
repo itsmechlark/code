@@ -125,6 +125,20 @@ resource "azurerm_network_security_rule" "code-cloudflare-ipv6" {
   network_security_group_name = azurerm_network_security_group.code.name
 }
 
+resource "azurerm_network_security_rule" "code-whitelisted" {
+  name                        = "AllowInboundWhitelisted"
+  priority                    = 103
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefixes     = var.whitelisted_ips
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.code.name
+  network_security_group_name = azurerm_network_security_group.code.name
+}
+
 resource "azurerm_network_interface_security_group_association" "code" {
   network_interface_id      = azurerm_network_interface.code.id
   network_security_group_id = azurerm_network_security_group.code.id

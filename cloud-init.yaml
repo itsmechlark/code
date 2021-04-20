@@ -4,6 +4,8 @@ users:
       groups: sudo
       shell: /bin/bash
       sudo: ALL=(ALL) NOPASSWD:ALL
+      ssh_authorized_keys:
+        - ${ssh_public_key}
 
 package_upgrade: true
 packages:
@@ -30,8 +32,8 @@ write_files:
   permissions: '644'
 
 bootcmd:
-  - echo localhost ${hostname} >> /etc/hosts
-  - echo localhost ${domain} >> /etc/hosts
+  - echo '127.0.0.1 ${hostname}' >> /etc/hosts
+  - echo '127.0.0.1 ${domain}' >> /etc/hosts
 
 runcmd:
     # Configure SSH for Short-Lived CA

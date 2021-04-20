@@ -151,6 +151,7 @@ data "template_file" "code-cloud_init" {
     hostname           = var.name
     domain             = cloudflare_record.code.hostname
     argo_tunnel_id     = var.argo_tunnel_id
+    ssh_public_key     = var.ssh_public_key
     ssh_ca_public_key  = base64encode(cloudflare_access_ca_certificate.code.public_key)
     cloudflared_config = base64encode(data.template_file.code-cloudflared_config.rendered)
     cloudflared_auth   = base64encode(data.template_file.code-cloudflared_auth.rendered)

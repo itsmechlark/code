@@ -37,13 +37,6 @@ bootcmd:
   - echo '127.0.0.1 ${domain}' >> /etc/hosts
 
 runcmd:
-    # Setup data disk
-    - sudo parted /dev/sdc --script mklabel gpt mkpart xfspart xfs 0% 100% && sudo mkfs.xfs /dev/sdc1 && sudo partprobe /dev/sdc1
-    - sudo mkdir /home-backup && sudo rsync -ra /home/${user_name} /home-backup
-    - sudo rm -rf /home && sudo mkdir /home
-    - sudo mount /dev/sdc1 /home
-    - sudo sh -c 'echo "/dev/sdc1   /datadrive   xfs   defaults,nofail   1   2" >> /etc/fstab'
-    - sudo rsync -ra /home-backup/${user_name} /home && sudo rm -rf /home-backup
     # Configure SSH for short-lived ca
     - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'
     - sudo sh -c 'echo "TrustedUserCAKeys /etc/ssh/ca.pub" >> /etc/ssh/sshd_config'

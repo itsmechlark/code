@@ -26,7 +26,7 @@ write_files:
 - encoding: b64
   content: ${cloudflared_auth}
   owner: root:root
-  path: /etc/cloudflared/${domain}.yml
+  path: /etc/cloudflared/${argo_tunnel_id}.yml
   permissions: '644'
 
 runcmd:
@@ -34,6 +34,8 @@ runcmd:
     - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'
     - sudo sh -c 'echo "TrustedUserCAKeys /etc/ssh/ca.pub" >> /etc/ssh/sshd_config'
     - sudo systemctl restart ssh
-    # Install Cloudflare CLI
+    # Setup Cloudflare CLI
     - sudo curl -sSL -o /home/${user_name}/cloudflared-stable-linux-amd64.deb https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
     - sudo dpkg -i /home/${user_name}/cloudflared-stable-linux-amd64.deb
+    - sudo cloudflared service install
+    - sudo systemctl start cloudflared.service

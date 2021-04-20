@@ -19,7 +19,6 @@ resource "cloudflare_access_application" "code" {
     allow_all_methods     = true
     allowed_origins       = ["https://${cloudflare_record.code.hostname}"]
     allow_credentials     = true
-    enable_binding_cookie = true
     max_age               = 10
   }
 }

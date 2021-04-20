@@ -28,7 +28,7 @@ write_files:
 - encoding: b64
   content: ${cloudflared_auth}
   owner: root:root
-  path: /etc/cloudflared/${argo_tunnel_id}.yml
+  path: /etc/cloudflared/${argo_tunnel_id}.json
   permissions: '644'
 
 bootcmd:

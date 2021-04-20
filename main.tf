@@ -167,6 +167,7 @@ resource "azurerm_linux_virtual_machine" "code" {
   source_image_reference {
     publisher = "Debian"
     offer     = "debian-10"
+    sku       = "10"
     version   = "latest"
   }
 

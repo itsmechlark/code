@@ -13,6 +13,7 @@ packages:
     - postgresql-contrib
     - redis-server
     - gnupg2
+    - rsync
 
 write_files:
 - encoding: b64
@@ -36,11 +37,21 @@ bootcmd:
   - echo '127.0.0.1 ${domain}' >> /etc/hosts
 
 runcmd:
-    # Configure SSH for Short-Lived CA
+    # Setup data disk
+    - sudo parted /dev/sdc --script mklabel gpt mkpart xfspart xfs 0% 100%
+    - sudo mkfs.xfs /dev/sdc1
+    - sudo partprobe /dev/sdc1
+    - sudo mkdir /home-backup
+    - sudo rsync -ra /home/${user_name} /home-backup
+    - sudo mount /dev/sdc1 /home
+    - sudo sh -c 'echo "/dev/sdc1   /datadrive   xfs   defaults,nofail   1   2" >> /etc/fstab'
+    - sudo rsync -ra /home-backup/${user_name} /home
+    - sudo rm -rf /home-backup
+    # Configure SSH for short-lived ca
     - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'
     - sudo sh -c 'echo "TrustedUserCAKeys /etc/ssh/ca.pub" >> /etc/ssh/sshd_config'
     - sudo systemctl restart ssh
-    # Setup Cloudflare CLI
+    # Setup cloudflare cli
     - sudo curl -sSL -o /home/${user_name}/cloudflared-stable-linux-amd64.deb https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
     - sudo dpkg -i /home/${user_name}/cloudflared-stable-linux-amd64.deb
     - sudo cloudflared service install

@@ -206,14 +206,23 @@ resource "azurerm_managed_disk" "code" {
   name                 = "${random_pet.code.id}-data"
   location             = azurerm_resource_group.code.location
   create_option        = "Empty"
-  disk_size_gb         = 128
+  disk_size_gb         = 512
   resource_group_name  = azurerm_resource_group.code.name
   storage_account_type = "StandardSSD_LRS"
 }
 
-resource "azurerm_virtual_machine_data_disk_attachment" "code" {
-  virtual_machine_id = azurerm_linux_virtual_machine.code.id
-  managed_disk_id    = azurerm_managed_disk.code.id
-  lun                = 0
-  caching            = "ReadWrite"
+resource "azurerm_managed_disk" "code-userdata" {
+  name                 = "${random_pet.code.id}-userdata"
+  location             = azurerm_resource_group.code.location
+  create_option        = "Empty"
+  disk_size_gb         = 1024
+  resource_group_name  = azurerm_resource_group.code.name
+  storage_account_type = "StandardSSD_LRS"
 }
+
+# resource "azurerm_virtual_machine_data_disk_attachment" "code" {
+#   virtual_machine_id = azurerm_linux_virtual_machine.code.id
+#   managed_disk_id    = azurerm_managed_disk.code.id
+#   lun                = 0
+#   caching            = "ReadWrite"
+# }

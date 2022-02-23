@@ -222,3 +222,15 @@ resource "azurerm_virtual_machine_data_disk_attachment" "code" {
   lun                = 0
   caching            = "ReadWrite"
 }
+
+data "azurerm_managed_disk" "code-userdata" {
+  name                = "code-modern-kid-userdata"
+  resource_group_name = azurerm_resource_group.code.name
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "code-userdata" {
+  virtual_machine_id = azurerm_linux_virtual_machine.code.id
+  managed_disk_id    = azurerm_managed_disk.code-userdata.id
+  lun                = 1
+  caching            = "ReadWrite"
+}

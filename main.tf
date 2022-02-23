@@ -16,10 +16,10 @@ resource "cloudflare_access_application" "code" {
   auto_redirect_to_identity = false
 
   cors_headers {
-    allow_all_methods     = true
-    allowed_origins       = ["https://${cloudflare_record.code.hostname}"]
-    allow_credentials     = true
-    max_age               = 10
+    allow_all_methods = true
+    allowed_origins   = ["https://${cloudflare_record.code.hostname}"]
+    allow_credentials = true
+    max_age           = 10
   }
 }
 
@@ -206,7 +206,7 @@ resource "azurerm_managed_disk" "code" {
   name                 = "${random_pet.code.id}-data"
   location             = azurerm_resource_group.code.location
   create_option        = "Empty"
-  disk_size_gb         = 128
+  disk_size_gb         = 512
   resource_group_name  = azurerm_resource_group.code.name
   storage_account_type = "StandardSSD_LRS"
 }

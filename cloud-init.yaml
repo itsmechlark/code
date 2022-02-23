@@ -7,11 +7,14 @@ users:
       ssh_authorized_keys:
         - ${ssh_public_key}
 
+package_update: true
 package_upgrade: true
 packages:
     - postgresql
     - postgresql-contrib
     - redis-server
+    - git
+    - gpg
     - gnupg2
     - rsync
 
@@ -31,6 +34,11 @@ write_files:
   owner: root:root
   path: /etc/cloudflared/${argo_tunnel_id}.json
   permissions: '644'
+- encoding: b64
+  content: ${laptop}
+  owner: ${user_name}:${user_name}
+  path: /home/${user_name}/laptop
+  permissions: '775'
 
 bootcmd:
   - echo '127.0.0.1 ${hostname}' >> /etc/hosts
@@ -41,8 +49,3 @@ runcmd:
     - sudo sh -c 'echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config'
     - sudo sh -c 'echo "TrustedUserCAKeys /etc/ssh/ca.pub" >> /etc/ssh/sshd_config'
     - sudo systemctl restart ssh
-    # Setup cloudflare cli
-    - sudo curl -sSL -o /home/${user_name}/cloudflared-stable-linux-amd64.deb https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.deb
-    - sudo dpkg -i /home/${user_name}/cloudflared-stable-linux-amd64.deb
-    - sudo cloudflared service install
-    - sudo systemctl start cloudflared.service

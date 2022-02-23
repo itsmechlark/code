@@ -144,6 +144,10 @@ resource "azurerm_network_interface_security_group_association" "code" {
   network_security_group_id = azurerm_network_security_group.code.id
 }
 
+data "template_file" "code-laptop" {
+  template = file("./laptop")
+}
+
 data "template_file" "code-cloud_init" {
   template = file("./cloud-init.yaml")
   vars = {
@@ -155,6 +159,7 @@ data "template_file" "code-cloud_init" {
     ssh_ca_public_key  = base64encode(cloudflare_access_ca_certificate.code.public_key)
     cloudflared_config = base64encode(data.template_file.code-cloudflared_config.rendered)
     cloudflared_auth   = base64encode(data.template_file.code-cloudflared_auth.rendered)
+    laptop             = base64encode(data.template_file.code-laptop.rendered)
   }
 }
 

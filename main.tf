@@ -230,7 +230,7 @@ data "azurerm_managed_disk" "code-userdata" {
 
 resource "azurerm_virtual_machine_data_disk_attachment" "code-userdata" {
   virtual_machine_id = azurerm_linux_virtual_machine.code.id
-  managed_disk_id    = azurerm_managed_disk.code-userdata.id
+  managed_disk_id    = data.azurerm_managed_disk.code-userdata.id
   lun                = 1
   caching            = "ReadWrite"
 }
